@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Seron - Your Voice Changes Japan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Inter', sans-serif; color: #1a1a1a; background: #fff; line-height: 1.7; }
+  header { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; background: rgba(255,255,255,0.97); backdrop-filter: blur(10px); border-bottom: 1px solid #e8e8e8; transition: box-shadow 0.3s; }
+  header.scrolled { box-shadow: 0 2px 20px rgba(0,0,0,0.12); }
+  nav { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; height: 68px; }
+  .logo { font-size: 24px; font-weight: 800; color: #1a3a2a; text-decoration: none; letter-spacing: -0.5px; }
+  .nav-links { display: flex; gap: 32px; list-style: none; }
+  .nav-links a { color: #333; text-decoration: none; font-size: 14px; font-weight: 500; transition: color 0.2s; }
+  .nav-links a:hover { color: #1a3a2a; }
+  .nav-right { display: flex; align-items: center; gap: 12px; }
+  .lang-toggle { display: flex; border: 1.5px solid #1a3a2a; border-radius: 20px; overflow: hidden; }
+  .lang-btn { padding: 5px 13px; font-size: 12px; font-weight: 600; cursor: pointer; border: none; background: transparent; color: #1a3a2a; transition: all 0.2s; }
+  .lang-btn.active { background: #1a3a2a; color: #fff; }
+  .lang-btn:hover:not(.active) { background: #f0f7f3; }
+  .btn-line { background: #06C755; color: #fff; padding: 9px 20px; border-radius: 24px; font-weight: 700; font-size: 13px; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; transition: opacity 0.2s, transform 0.1s; white-space: nowrap; }
+  .btn-line:hover { opacity: 0.88; transform: translateY(-1px); }
+  .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px; background: none; border: none; }
+  .hamburger span { display: block; width: 24px; height: 2px; background: #1a3a2a; transition: 0.3s; border-radius: 2px; }
+  .mobile-menu { display: none; flex-direction: column; gap: 0; background: #fff; border-top: 1px solid #e8e8e8; padding: 16px 24px 20px; }
+  .mobile-menu a { color: #333; text-decoration: none; font-size: 15px; font-weight: 500; padding: 12px 0; border-bottom: 1px solid #f0f0f0; }
+  .mobile-menu.open { display: flex; }
+  .mobile-menu .mobile-cta { margin-top: 16px; text-align: center; }
+  .mobile-lang { display: flex; gap: 8px; margin-top: 12px; justify-content: center; }
+
+  .fade-in { opacity: 0; transform: translateY(28px); transition: opacity 0.65s ease, transform 0.65s ease; }
+  .fade-in.visible { opacity: 1; transform: none; }
+
+  section { padding: 96px 24px; }
+  .container { max-width: 1100px; margin: 0 auto; }
+  .section-tag { display: inline-block; font-size: 11px; font-weight: 700; color: #1a3a2a; background: #e8f5ee; border-radius: 20px; padding: 4px 14px; letter-spacing: 1.2px; text-transform: uppercase; margin-bottom: 14px; }
+  h2 { font-size: clamp(28px, 4vw, 40px); font-weight: 800; color: #1a1a1a; line-height: 1.2; letter-spacing: -0.5px; }
+  .section-header { text-align: center; margin-bottom: 56px; }
+  .section-header h2 { margin-top: 4px; }
+
+  /* HERO */
+  #hero { min-height: 100vh; padding: 0; position: relative; display: flex; align-items: center; background: #0d1f17; }
+  .hero-bg { position: absolute; inset: 0; background-image: url('https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=1400&q=80'); background-size: cover; background-position: center; opacity: 0.5; }
+  .hero-overlay { position: absolute; inset: 0; background: linear-gradient(135deg, rgba(10,30,20,0.82) 0%, rgba(10,30,20,0.55) 100%); }
+  .hero-content { position: relative; z-index: 1; max-width: 1100px; margin: 0 auto; padding: 120px 24px 80px; }
+  .hero-badge { display: inline-block; background: rgba(6,199,85,0.18); border: 1px solid rgba(6,199,85,0.4); color: #4ade80; font-size: 12px; font-weight: 600; padding: 5px 14px; border-radius: 20px; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 24px; }
+  .hero-content h1 { font-size: clamp(42px, 6vw, 72px); font-weight: 800; color: #fff; line-height: 1.1; letter-spacing: -1.5px; max-width: 720px; margin-bottom: 24px; }
+  .hero-content p { font-size: clamp(16px, 2vw, 19px); color: rgba(255,255,255,0.82); max-width: 540px; margin-bottom: 40px; line-height: 1.7; }
+  .btn-line-hero { background: #06C755; color: #fff; padding: 16px 36px; border-radius: 32px; font-weight: 700; font-size: 16px; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; transition: opacity 0.2s, transform 0.1s; box-shadow: 0 8px 32px rgba(6,199,85,0.35); }
+  .btn-line-hero:hover { opacity: 0.9; transform: translateY(-2px); }
+
+  /* ABOUT */
+  #about { background: #fff; }
+  .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 72px; align-items: center; }
+  .about-subtitle { font-size: 17px; color: #3a7a55; font-weight: 600; margin-bottom: 20px; }
+  .about-text h2 { margin-bottom: 6px; }
+  .about-text p { font-size: 16px; color: #444; line-height: 1.8; margin-top: 20px; }
+  .about-img { border-radius: 20px; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.13); }
+  .about-img img { width: 100%; height: 420px; object-fit: cover; display: block; }
+
+  /* BENEFITS */
+  #benefits { background: #1a3a2a; }
+  .benefits-header { text-align: center; margin-bottom: 56px; }
+  .benefits-header .section-tag { background: rgba(6,199,85,0.2); color: #4ade80; }
+  .benefits-header h2 { color: #fff; margin-top: 4px; }
+  .benefits-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .benefit-card { background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12); border-radius: 18px; padding: 36px 24px; text-align: center; }
+  .benefit-icon { font-size: 40px; margin-bottom: 16px; display: block; }
+  .benefit-highlight { font-size: 30px; font-weight: 800; color: #4ade80; display: block; margin-bottom: 8px; }
+  .benefit-card h3 { font-size: 17px; font-weight: 700; color: #fff; margin-bottom: 10px; }
+  .benefit-card p { font-size: 14px; color: rgba(255,255,255,0.7); line-height: 1.75; }
+
+  /* MONITORS */
+  #monitors { background: #f9f9f7; }
+  .monitor-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .monitor-card { background: #fff; border-radius: 18px; overflow: hidden; box-shadow: 0 4px 24px rgba(0,0,0,0.08); transition: transform 0.3s, box-shadow 0.3s; }
+  .monitor-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0,0,0,0.13); }
+  .monitor-img { height: 200px; overflow: hidden; position: relative; }
+  .monitor-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .monitor-status { position: absolute; top: 14px; left: 14px; padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; letter-spacing: 0.5px; }
+  .status-open { background: #06C755; color: #fff; }
+  .status-soon { background: #f59e0b; color: #fff; }
+  .monitor-body { padding: 20px 22px 26px; }
+  .monitor-cat { font-size: 11px; font-weight: 700; color: #3a7a55; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+  .monitor-body h3 { font-size: 16px; font-weight: 700; color: #1a1a1a; margin-bottom: 10px; line-height: 1.4; }
+  .monitor-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
+  .monitor-tag { font-size: 11px; background: #e8f5ee; color: #1a3a2a; padding: 3px 10px; border-radius: 12px; font-weight: 600; }
+  .monitor-area { font-size: 12px; color: #888; margin-top: 10px; }
+
+  /* TESTIMONIALS */
+  #testimonials { background: #fff; }
+  .testimonial-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .testimonial-card { background: #f9f9f7; border-radius: 18px; padding: 32px 26px; position: relative; }
+  .testimonial-card::before { content: '"'; font-size: 72px; color: #1a3a2a; opacity: 0.1; position: absolute; top: 10px; left: 18px; line-height: 1; font-family: Georgia, serif; }
+  .stars { color: #f59e0b; font-size: 14px; margin-bottom: 12px; }
+  .testimonial-text { font-size: 14px; color: #444; line-height: 1.8; margin-bottom: 22px; position: relative; z-index: 1; }
+  .testimonial-author { display: flex; align-items: center; gap: 12px; }
+  .testimonial-avatar { width: 46px; height: 46px; border-radius: 50%; object-fit: cover; }
+  .testimonial-name { font-size: 14px; font-weight: 700; color: #1a1a1a; }
+  .testimonial-meta { font-size: 12px; color: #888; margin-top: 2px; }
+
+  /* AREAS */
+  #areas { background: #f9f9f7; }
+  .area-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; max-width: 860px; margin: 0 auto; }
+  .area-card { border: 2px solid #e8f5ee; border-radius: 16px; padding: 28px 16px; text-align: center; transition: all 0.25s; }
+  .area-card:hover, .area-card.active { border-color: #1a3a2a; background: #f0f7f3; }
+  .area-icon { font-size: 30px; margin-bottom: 10px; display: block; }
+  .area-name { font-size: 17px; font-weight: 700; color: #1a1a1a; margin-bottom: 4px; }
+  .area-count { font-size: 12px; color: #888; }
+  .area-badge { display: inline-block; font-size: 10px; font-weight: 700; background: #06C755; color: #fff; padding: 2px 10px; border-radius: 10px; margin-top: 8px; }
+  .area-badge.coming { background: #f59e0b; }
+
+  /* HOW IT WORKS */
+  #how { background: #fff; }
+  .steps { display: flex; flex-direction: column; max-width: 820px; margin: 0 auto; }
+  .step { display: grid; grid-template-columns: 280px 1fr; gap: 48px; align-items: center; position: relative; padding-bottom: 56px; }
+  .step:last-child { padding-bottom: 0; }
+  .step:not(:last-child)::after { content: ''; position: absolute; left: 139px; top: calc(100% - 56px + 12px); width: 2px; border-left: 2px dashed #b0cfc0; height: 56px; }
+  .step-img { border-radius: 16px; overflow: hidden; box-shadow: 0 8px 32px rgba(0,0,0,0.12); height: 200px; }
+  .step-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .step-num { width: 44px; height: 44px; border-radius: 50%; background: #1a3a2a; color: #fff; font-size: 18px; font-weight: 800; display: flex; align-items: center; justify-content: center; margin-bottom: 14px; }
+  .step-body h3 { font-size: 21px; font-weight: 700; color: #1a1a1a; margin-bottom: 10px; }
+  .step-body p { font-size: 15px; color: #555; line-height: 1.75; }
+
+  /* RULES */
+  #rules { background: #f9f9f7; }
+  .rules-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; max-width: 760px; margin: 0 auto; }
+  .rule-item { display: flex; align-items: flex-start; gap: 12px; padding: 18px 20px; background: #fff; border-radius: 12px; border-left: 3px solid #1a3a2a; }
+  .rule-icon { color: #1a3a2a; font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+  .rule-item span { font-size: 15px; color: #333; font-weight: 500; }
+
+  /* FAQ */
+  #faq { background: #fff; }
+  .faq-list { max-width: 720px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; }
+  .faq-item { background: #f9f9f7; border-radius: 14px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); overflow: hidden; }
+  .faq-q { width: 100%; text-align: left; padding: 20px 24px; font-size: 16px; font-weight: 600; color: #1a1a1a; background: none; border: none; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: color 0.2s; }
+  .faq-q:hover { color: #1a3a2a; }
+  .faq-q .arrow { font-size: 12px; color: #888; transition: transform 0.3s; flex-shrink: 0; margin-left: 16px; }
+  .faq-q.open .arrow { transform: rotate(180deg); color: #1a3a2a; }
+  .faq-a { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; }
+  .faq-a.open { max-height: 200px; }
+  .faq-a p { padding: 0 24px 20px; font-size: 15px; color: #555; line-height: 1.75; border-top: 1px solid #e8e8e8; padding-top: 14px; }
+
+  /* FINAL CTA */
+  #final-cta { position: relative; min-height: 420px; display: flex; align-items: center; justify-content: center; text-align: center; padding: 80px 24px; background: #0d1f17; }
+  .final-bg { position: absolute; inset: 0; background-image: url('https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=1400&q=80'); background-size: cover; background-position: center; opacity: 0.4; }
+  .final-overlay { position: absolute; inset: 0; background: rgba(10,30,20,0.65); }
+  .final-content { position: relative; z-index: 1; }
+  .final-content h2 { color: #fff; font-size: clamp(32px, 5vw, 54px); margin-bottom: 32px; letter-spacing: -1px; }
+
+  /* STATS */
+  #stats { background: #fff; padding: 72px 24px; }
+  .stats-grid { display: flex; gap: 80px; justify-content: center; align-items: center; flex-wrap: wrap; }
+  .stat-item { text-align: center; }
+  .stat-num { font-size: clamp(48px, 6vw, 64px); font-weight: 800; color: #1a3a2a; line-height: 1; display: block; letter-spacing: -2px; }
+  .stat-label { font-size: 15px; color: #666; font-weight: 500; margin-top: 8px; display: block; }
+
+  /* FOOTER */
+  footer { background: #1a3a2a; color: #fff; padding: 56px 24px 32px; }
+  .footer-grid { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 48px; margin-bottom: 40px; }
+  .footer-brand .logo { color: #fff; font-size: 22px; }
+  .footer-brand p { color: rgba(255,255,255,0.6); font-size: 14px; margin-top: 12px; line-height: 1.7; }
+  .footer-col h4 { font-size: 13px; font-weight: 700; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; }
+  .footer-col a { display: block; color: rgba(255,255,255,0.75); text-decoration: none; font-size: 14px; margin-bottom: 10px; transition: color 0.2s; }
+  .footer-col a:hover { color: #fff; }
+  .footer-bottom { max-width: 1100px; margin: 0 auto; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 24px; text-align: center; color: rgba(255,255,255,0.4); font-size: 13px; }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    .about-grid { grid-template-columns: 1fr; gap: 40px; }
+    .benefits-grid, .monitor-grid, .testimonial-grid { grid-template-columns: 1fr; }
+    .area-grid { grid-template-columns: repeat(2, 1fr); }
+    .step { grid-template-columns: 1fr; gap: 24px; }
+    .step:not(:last-child)::after { display: none; }
+    .footer-grid { grid-template-columns: 1fr; gap: 32px; }
+  }
+  @media (max-width: 768px) {
+    .nav-links { display: none; }
+    .hamburger { display: flex; }
+    .btn-line { display: none; }
+    section { padding: 64px 20px; }
+    .rules-grid { grid-template-columns: 1fr; }
+    .area-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 480px) {
+    .hero-content h1 { font-size: 36px; }
+    h2 { font-size: 26px; }
+    .area-grid { grid-template-columns: 1fr 1fr; }
+  }
+
+  [data-en], [data-ja] { transition: opacity 0.2s; }
+  .lang-fade { opacity: 0; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header id="site-header">
+  <nav>
+    <a href="#" class="logo">Seron</a>
+    <ul class="nav-links">
+      <li><a href="#about" data-en="About" data-ja="Seronについて">About</a></li>
+      <li><a href="#monitors" data-en="Monitors" data-ja="体験募集">Monitors</a></li>
+      <li><a href="#areas" data-en="Areas" data-ja="対応エリア">Areas</a></li>
+      <li><a href="#faq" data-en="FAQ" data-ja="よくある質問">FAQ</a></li>
+    </ul>
+    <div class="nav-right">
+      <div class="lang-toggle">
+        <button class="lang-btn" id="btn-en" onclick="setLanguage('en')">EN</button>
+        <button class="lang-btn" id="btn-ja" onclick="setLanguage('ja')">JP</button>
+      </div>
+      <a href="https://lin.ee/Vf3InyV" target="_blank" class="btn-line">
+        <span data-en="Register with LINE" data-ja="LINEで登録する">Register with LINE</span>
+      </a>
+      <button class="hamburger" id="hamburger" onclick="toggleMenu()">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+  <div class="mobile-menu" id="mobile-menu">
+    <a href="#about" onclick="toggleMenu()" data-en="About" data-ja="Seronについて">About</a>
+    <a href="#monitors" onclick="toggleMenu()" data-en="Monitors" data-ja="体験募集">Monitors</a>
+    <a href="#areas" onclick="toggleMenu()" data-en="Areas" data-ja="対応エリア">Areas</a>
+    <a href="#faq" onclick="toggleMenu()" data-en="FAQ" data-ja="よくある質問">FAQ</a>
+    <div class="mobile-cta">
+      <a href="https://lin.ee/Vf3InyV" target="_blank" class="btn-line" style="justify-content:center;">
+        <span data-en="Register with LINE" data-ja="LINEで登録する">Register with LINE</span>
+      </a>
+    </div>
+    <div class="mobile-lang">
+      <button class="lang-btn" id="mbtn-en" onclick="setLanguage('en')" style="border:1.5px solid #1a3a2a;border-radius:20px;">EN</button>
+      <button class="lang-btn" id="mbtn-ja" onclick="setLanguage('ja')" style="border:1.5px solid #1a3a2a;border-radius:20px;">JP</button>
+    </div>
+  </div>
+</header>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <div class="hero-badge" data-en="🌏 For Foreigners in Japan" data-ja="🌏 在日外国人の方へ">🌏 For Foreigners in Japan</div>
+    <h1 data-en="Your voice changes Japan." data-ja="あなたの声が、<br>日本を動かす。">Your voice changes Japan.</h1>
+    <p data-en="As a foreigner living in Japan, your perspective matters. Join Seron and help shape a better Japan." data-ja="日本に住む外国人として、あなたの視点はとても大切です。Seronに参加して、より良い日本を一緒に作りましょう。">As a foreigner living in Japan, your perspective matters. Join Seron and help shape a better Japan.</p>
+    <a href="https://lin.ee/Vf3InyV" target="_blank" class="btn-line-hero">
+      <span data-en="Register with LINE" data-ja="LINEで登録する">Register with LINE</span>
+    </a>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="container">
+    <div class="about-grid fade-in">
+      <div class="about-text">
+        <span class="section-tag" data-en="About Seron" data-ja="Seronとは">About Seron</span>
+        <h2 data-en="What is Seron?" data-ja="Seronとは？">What is Seron?</h2>
+        <p class="about-subtitle" data-en="A monitor service for foreigners living in Japan" data-ja="在日外国人のためのモニターサービス">A monitor service for foreigners living in Japan</p>
+        <p data-en="Seron is a community platform that connects foreigners living in Japan. Share your honest opinions about Japanese food, culture, services, and society — your feedback directly reaches Japanese companies and policymakers." data-ja="Seronは、日本に住む外国人をつなぐコミュニティプラットフォームです。日本の食べ物、文化、サービス、社会についての率直な意見をシェアしてください。あなたのフィードバックは日本企業や政策立案者に直接届きます。">Seron is a community platform that connects foreigners living in Japan. Share your honest opinions about Japanese food, culture, services, and society — your feedback directly reaches Japanese companies and policymakers.</p>
+      </div>
+      <div class="about-img">
+        <img src="https://images.unsplash.com/photo-1547592180-85f173990554?w=700&q=80" alt="Japanese food">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BENEFITS -->
+<section id="benefits">
+  <div class="container">
+    <div class="benefits-header fade-in">
+      <span class="section-tag" data-en="Why Join?" data-ja="参加するメリット">Why Join?</span>
+      <h2 data-en="Free experiences, real rewards" data-ja="無料体験＋うれしい特典つき">Free experiences, real rewards</h2>
+    </div>
+    <div class="benefits-grid fade-in" style="grid-template-columns: repeat(2, 1fr); max-width: 760px; margin: 0 auto;">
+      <div class="benefit-card">
+        <span class="benefit-icon">🎉</span>
+        <span class="benefit-highlight" data-en="100% Free" data-ja="完全無料">100% Free</span>
+        <h3 data-en="Experience costs covered" data-ja="体験費用は全額負担">Experience costs covered</h3>
+        <p data-en="Restaurant meals, beauty treatments, and cultural activities are all provided at no cost to you." data-ja="飲食・美容・文化体験など、体験にかかる費用はSeronが全額負担します。">Restaurant meals, beauty treatments, and cultural activities are all provided at no cost to you.</p>
+      </div>
+      <div class="benefit-card">
+        <span class="benefit-icon">📝</span>
+        <span class="benefit-highlight" data-en="No SNS Posting" data-ja="SNS投稿不要">No SNS Posting</span>
+        <h3 data-en="Just fill out a survey" data-ja="アンケートに答えるだけ">Just fill out a survey</h3>
+        <p data-en="No need to post on Instagram or any social media. All we ask is an honest survey response after your experience." data-ja="InstagramなどのSNSへの投稿は一切不要。体験後のアンケートに率直に答えていただくだけでOKです。">No need to post on Instagram or any social media. All we ask is an honest survey response after your experience.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- TESTIMONIALS -->
+<section id="testimonials">
+  <div class="container">
+    <div class="section-header fade-in">
+      <span class="section-tag" data-en="Voices" data-ja="参加者の声">Voices</span>
+      <h2 data-en="What members are saying" data-ja="参加者からのコメント">What members are saying</h2>
+    </div>
+    <div class="testimonial-grid">
+      <div class="testimonial-card fade-in">
+        <div class="stars">★★★★★</div>
+        <p class="testimonial-text" data-en="I got to try an amazing omakase restaurant for free! The survey was only 10 minutes and the staff were super friendly. I've already recommended Seron to all my friends." data-ja="素晴らしいおまかせレストランを無料で体験できました！アンケートはたった10分で、スタッフもとても親切でした。友人全員にSeronをすすめました。">I got to try an amazing omakase restaurant for free! The survey was only 10 minutes and the staff were super friendly. I've already recommended Seron to all my friends.</p>
+        <div class="testimonial-author">
+          <img class="testimonial-avatar" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&q=80" alt="Sarah">
+          <div>
+            <div class="testimonial-name">Sarah M.</div>
+            <div class="testimonial-meta" data-en="🇬🇧 UK · Osaka" data-ja="🇬🇧 イギリス・大阪在住">🇬🇧 UK · Osaka</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card fade-in">
+        <div class="stars">★★★★★</div>
+        <p class="testimonial-text" data-en="The head spa was incredible — I never would have found that place on my own. Seron is the best way to discover hidden gems in Japan as a foreigner." data-ja="ヘッドスパが最高でした。自分では絶対に見つけられなかった場所です。外国人として日本の穴場を発見するには、Seronが一番です。">The head spa was incredible — I never would have found that place on my own. Seron is the best way to discover hidden gems in Japan as a foreigner.</p>
+        <div class="testimonial-author">
+          <img class="testimonial-avatar" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&q=80" alt="Carlos">
+          <div>
+            <div class="testimonial-name">Carlos R.</div>
+            <div class="testimonial-meta" data-en="🇧🇷 Brazil · Tokyo" data-ja="🇧🇷 ブラジル・東京在住">🇧🇷 Brazil · Tokyo</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card fade-in">
+        <div class="stars">★★★★☆</div>
+        <p class="testimonial-text" data-en="Very easy to join via LINE. I've done 3 monitors so far and each experience was unique. My opinions actually felt heard and valued." data-ja="LINEからの登録がとても簡単でした。これまで3回参加しましたが、毎回ユニークな体験でした。自分の意見がきちんと届いている実感があります。">Very easy to join via LINE. I've done 3 monitors so far and each experience was unique. My opinions actually felt heard and valued.</p>
+        <div class="testimonial-author">
+          <img class="testimonial-avatar" src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&q=80" alt="Mei">
+          <div>
+            <div class="testimonial-name">Mei L.</div>
+            <div class="testimonial-meta" data-en="🇨🇳 China · Osaka" data-ja="🇨🇳 中国・大阪在住">🇨🇳 China · Osaka</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- AREAS -->
+<section id="areas">
+  <div class="container">
+    <div class="section-header fade-in">
+      <span class="section-tag" data-en="Coverage" data-ja="対応エリア">Coverage</span>
+      <h2 data-en="Available areas" data-ja="対応エリア一覧">Available areas</h2>
+    </div>
+    <div class="area-grid fade-in">
+      <div class="area-card active">
+        <span class="area-icon">🗼</span>
+        <div class="area-name" data-en="Tokyo" data-ja="東京">Tokyo</div>
+        <div class="area-count" data-en="5 monitors" data-ja="5件募集中">5 monitors</div>
+        <span class="area-badge" data-en="Active" data-ja="募集中">Active</span>
+      </div>
+      <div class="area-card">
+        <span class="area-icon">🏙️</span>
+        <div class="area-name" data-en="Osaka" data-ja="大阪">Osaka</div>
+        <div class="area-count" data-en="12 monitors" data-ja="12件募集中">12 monitors</div>
+        <span class="area-badge" data-en="Active" data-ja="募集中">Active</span>
+      </div>
+      <div class="area-card">
+        <span class="area-icon">⛩️</span>
+        <div class="area-name" data-en="Kyoto" data-ja="京都">Kyoto</div>
+        <div class="area-count" data-en="Coming soon" data-ja="近日公開">Coming soon</div>
+        <span class="area-badge coming" data-en="Soon" data-ja="準備中">Soon</span>
+      </div>
+      <div class="area-card">
+        <span class="area-icon">🏔️</span>
+        <div class="area-name" data-en="Nagoya" data-ja="名古屋">Nagoya</div>
+        <div class="area-count" data-en="Coming soon" data-ja="近日公開">Coming soon</div>
+        <span class="area-badge coming" data-en="Soon" data-ja="準備中">Soon</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how">
+  <div class="container">
+    <div class="section-header fade-in">
+      <span class="section-tag" data-en="Step by Step" data-ja="ステップで分かる">Step by Step</span>
+      <h2 data-en="How it works" data-ja="参加の流れ">How it works</h2>
+    </div>
+    <div class="steps">
+      <div class="step fade-in">
+        <div class="step-img"><img src="https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=600&q=80" alt="Register"></div>
+        <div class="step-body"><div class="step-num">1</div><h3 data-en="Register with LINE" data-ja="LINEで登録する">Register with LINE</h3><p data-en="Register in just 30 seconds with your LINE account. No complicated procedures required." data-ja="LINEアカウントがあれば、たった30秒で登録完了。面倒な手続きは一切不要です。">Register in just 30 seconds. No complicated procedures required.</p></div>
+      </div>
+      <div class="step fade-in">
+        <div class="step-img"><img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&q=80" alt="Apply"></div>
+        <div class="step-body"><div class="step-num">2</div><h3 data-en="Apply for Experience Monitor" data-ja="体験モニターに申し込む">Apply for Experience Monitor</h3><p data-en="Browse and apply for experience monitors in food, beauty, cultural activities, and more." data-ja="飲食・美容・文化体験など、興味のある体験モニターを選んで申し込みましょう。">Browse and apply for monitors in food, beauty, culture, and more.</p></div>
+      </div>
+      <div class="step fade-in">
+        <div class="step-img"><img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=600&q=80" alt="Enjoy"></div>
+        <div class="step-body"><div class="step-num">3</div><h3 data-en="Enjoy the Experience" data-ja="体験する">Enjoy the Experience</h3><p data-en="Visit stores and events in person and experience Japanese culture and services firsthand." data-ja="実際に店舗やイベントに訪問して、日本の文化やサービスをリアルに体験しましょう。">Visit stores and events in person and experience Japanese culture firsthand.</p></div>
+      </div>
+      <div class="step fade-in">
+        <div class="step-img"><img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=600&q=80" alt="Review"></div>
+        <div class="step-body"><div class="step-num">4</div><h3 data-en="Share Your Review" data-ja="感想を投稿する">Share Your Review</h3><p data-en="After your experience, share your honest feedback. Your voice helps improve Japanese businesses and society." data-ja="体験後にアンケートや感想を投稿。あなたの声が日本企業や社会改善に活かされます。">Share your honest feedback via survey. Your voice helps improve Japanese businesses.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RULES -->
+<section id="rules">
+  <div class="container">
+    <div class="section-header fade-in">
+      <span class="section-tag" data-en="Guidelines" data-ja="ガイドライン">Guidelines</span>
+      <h2 data-en="Rules & Guidelines" data-ja="ルール・注意事項">Rules & Guidelines</h2>
+    </div>
+    <div class="rules-grid fade-in">
+      <div class="rule-item"><span class="rule-icon">✔</span><span data-en="Share honest opinions" data-ja="率直な意見を共有する">Share honest opinions</span></div>
+      <div class="rule-item"><span class="rule-icon">✔</span><span data-en="Must be 18 years or older" data-ja="18歳以上であること">Must be 18 years or older</span></div>
+      <div class="rule-item"><span class="rule-icon">✔</span><span data-en="Must be a resident of Japan" data-ja="日本在住であること">Must be a resident of Japan</span></div>
+      <div class="rule-item"><span class="rule-icon">✔</span><span data-en="Participate in good faith" data-ja="誠実に参加する">Participate in good faith</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+  <div class="container">
+    <div class="section-header fade-in">
+      <span class="section-tag" data-en="FAQ" data-ja="よくある質問">FAQ</span>
+      <h2 data-en="Frequently Asked Questions" data-ja="よくある質問">Frequently Asked Questions</h2>
+    </div>
+    <div class="faq-list fade-in">
+      <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span data-en="Is it free to join?" data-ja="参加は無料ですか？">Is it free to join?</span><span class="arrow">▼</span></button><div class="faq-a"><p data-en="Yes, Seron is completely free to join and use." data-ja="はい、Seronへの参加・利用は完全無料です。">Yes, Seron is completely free to join and use.</p></div></div>
+      <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span data-en="Do I need to post my experience on social media?" data-ja="体験の内容はSNSに投稿しないといけませんか？">Do I need to post my experience on social media?</span><span class="arrow">▼</span></button><div class="faq-a"><p data-en="No. Only a survey response is required." data-ja="いいえ。アンケートの回答のみです。">No. Only a survey response is required.</p></div></div>
+      <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span data-en="Is a residence status required?" data-ja="在留資格は必要ですか？">Is a residence status required?</span><span class="arrow">▼</span></button><div class="faq-a"><p data-en="Since this is an unpaid monitor program, no specific residence status is required." data-ja="報酬の発生しないモニターなので、在留資格は問いません。">Since this is an unpaid monitor program, no specific residence status is required.</p></div></div>
+      <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span data-en="What language can I use for the survey?" data-ja="アンケートの対応言語は？">What language can I use for the survey?</span><span class="arrow">▼</span></button><div class="faq-a"><p data-en="You are welcome to respond in your own language." data-ja="自身の言語で回答していただいて構いません。">You are welcome to respond in your own language.</p></div></div>
+      <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span data-en="Who can join Seron?" data-ja="誰でも参加できますか？">Who can join Seron?</span><span class="arrow">▼</span></button><div class="faq-a"><p data-en="Seron is open to all foreigners aged 18 and over living in Japan." data-ja="日本在住の18歳以上の外国人の方なら誰でも参加できます。">Seron is open to all foreigners aged 18 and over living in Japan.</p></div></div>
+      <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span data-en="What languages are supported?" data-ja="対応言語は？">What languages are supported?</span><span class="arrow">▼</span></button><div class="faq-a"><p data-en="Seron supports English and Japanese." data-ja="英語と日本語に対応しています。">Seron supports English and Japanese.</p></div></div>
+      <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span data-en="Is my data protected?" data-ja="個人情報は安全ですか？">Is my data protected?</span><span class="arrow">▼</span></button><div class="faq-a"><p data-en="Yes, we take privacy seriously and protect all your personal data in accordance with Japanese law." data-ja="はい、プライバシーを最重視し、日本の法律に従って全ての個人情報を適切に保護しています。">Yes, we take privacy seriously and protect all your personal data in accordance with Japanese law.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section id="final-cta">
+  <div class="final-bg"></div>
+  <div class="final-overlay"></div>
+  <div class="final-content fade-in">
+    <h2 data-en="Be part of the change" data-ja="変化の一部になろう">Be part of the change</h2>
+    <a href="https://lin.ee/Vf3InyV" target="_blank" class="btn-line-hero">
+      <span data-en="Register with LINE" data-ja="LINEで登録する">Register with LINE</span>
+    </a>
+  </div>
+</section>
+
+<!-- STATS -->
+<section id="stats">
+  <div class="container">
+    <div class="stats-grid fade-in">
+      <div class="stat-item"><span class="stat-num">100+</span><span class="stat-label" data-en="Members" data-ja="登録メンバー">Members</span></div>
+      <div class="stat-item"><span class="stat-num">12</span><span class="stat-label" data-en="Active Monitors" data-ja="募集中モニター">Active Monitors</span></div>
+      <div class="stat-item"><span class="stat-num">4</span><span class="stat-label" data-en="Cities" data-ja="対応都市">Cities</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <a href="#" class="logo">Seron</a>
+      <p data-en="A monitor service connecting foreigners in Japan with Japanese businesses and society." data-ja="日本に住む外国人と日本企業・社会をつなぐモニターサービス。">A monitor service connecting foreigners in Japan with Japanese businesses and society.</p>
+    </div>
+    <div class="footer-col">
+      <h4 data-en="Links" data-ja="リンク">Links</h4>
+      <a href="#about" data-en="About" data-ja="Seronについて">About</a>
+      <a href="#monitors" data-en="Monitors" data-ja="体験募集">Monitors</a>
+      <a href="#areas" data-en="Areas" data-ja="対応エリア">Areas</a>
+      <a href="#faq" data-en="FAQ" data-ja="よくある質問">FAQ</a>
+    </div>
+    <div class="footer-col">
+      <h4 data-en="Legal" data-ja="法的情報">Legal</h4>
+      <a href="#" data-en="Privacy Policy" data-ja="プライバシーポリシー">Privacy Policy</a>
+      <a href="#" data-en="Terms of Service" data-ja="利用規約">Terms of Service</a>
+      <a href="/cdn-cgi/l/email-protection#592a3c2b363730373338293837193e34383035773a3634"><span class="__cf_email__" data-cfemail="483b2d3a272621262229382926082f25292124662b2725">[email&#160;protected]</span></a>
+    </div>
+  </div>
+  <div class="footer-bottom"><p>© 2025 Seron. All rights reserved.</p></div>
+</footer>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  function setLanguage(lang) {
+    localStorage.setItem('seron_lang', lang);
+    document.querySelectorAll('[data-en], [data-ja]').forEach(el => el.classList.add('lang-fade'));
+    setTimeout(() => {
+      document.querySelectorAll('[data-en], [data-ja]').forEach(el => {
+        const text = el.getAttribute('data-' + lang);
+        if (text !== null) el.innerHTML = text;
+        el.classList.remove('lang-fade');
+      });
+    }, 180);
+    ['btn-en','btn-ja','mbtn-en','mbtn-ja'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.classList.remove('active');
+    });
+    const active = document.getElementById('btn-' + lang);
+    if (active) active.classList.add('active');
+    const mactive = document.getElementById('mbtn-' + lang);
+    if (mactive) mactive.classList.add('active');
+    document.documentElement.lang = lang === 'ja' ? 'ja' : 'en';
+  }
+
+  const savedLang = localStorage.getItem('seron_lang') || 'en';
+  setLanguage(savedLang);
+
+  window.addEventListener('scroll', () => {
+    document.getElementById('site-header').classList.toggle('scrolled', window.scrollY > 40);
+  });
+
+  function toggleMenu() {
+    document.getElementById('mobile-menu').classList.toggle('open');
+  }
+
+  function toggleFaq(btn) {
+    const answer = btn.nextElementSibling;
+    const isOpen = answer.classList.contains('open');
+    document.querySelectorAll('.faq-a').forEach(a => a.classList.remove('open'));
+    document.querySelectorAll('.faq-q').forEach(q => q.classList.remove('open'));
+    if (!isOpen) { answer.classList.add('open'); btn.classList.add('open'); }
+  }
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.f
