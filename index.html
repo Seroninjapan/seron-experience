@@ -37,6 +37,13 @@ header {
   transition: opacity 0.2s, transform 0.15s;
 }
 .btn-cta-sm:hover { opacity: 0.88; transform: translateY(-1px); }
+.btn-biz-sm {
+  color: #fff; padding: 8px 18px; border-radius: 24px;
+  font-weight: 700; font-size: 13px; text-decoration: none;
+  white-space: nowrap; background: #f97316;
+  transition: opacity 0.2s, transform 0.15s;
+}
+.btn-biz-sm:hover { opacity: 0.88; transform: translateY(-1px); }
 .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 4px; }
 .hamburger span { display: block; width: 22px; height: 2px; background: #fff; border-radius: 2px; }
 .mobile-menu { display: none; position: fixed; top: 64px; left: 0; right: 0; background: #0b1f13; padding: 20px 32px 28px; border-bottom: 1px solid rgba(255,255,255,0.1); z-index: 99; }
@@ -101,6 +108,16 @@ header {
 .btn-cta-lg:hover { opacity: 0.92; transform: translateY(-2px); box-shadow: 0 0 64px rgba(6,199,85,0.5); }
 .btn-cta-lg svg { width: 20px; height: 20px; }
 .hero-note { color: rgba(255,255,255,0.45); font-size: 13px; font-weight: 500; }
+.btn-outline {
+  background: #f97316; color: #fff;
+  padding: 16px 32px; border-radius: 36px;
+  font-weight: 700; font-size: 15px;
+  text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
+  box-shadow: 0 0 40px rgba(249,115,22,0.35);
+  transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
+}
+.btn-outline:hover { opacity: 0.92; transform: translateY(-2px); box-shadow: 0 0 56px rgba(249,115,22,0.5); }
+.btn-outline svg { width: 16px; height: 16px; }
 .hero-stats {
   display: flex; gap: 48px; margin-top: 72px;
   padding-top: 40px; border-top: 1px solid rgba(255,255,255,0.1);
@@ -378,6 +395,7 @@ footer { background: #040f09; padding: 60px 32px 36px; }
       <button class="lang-btn" id="btn-en" onclick="setLang('en')">EN</button>
       <button class="lang-btn" id="btn-ja" onclick="setLang('ja')">JP</button>
     </div>
+    <a href="https://client.seron-japan.com/" target="_blank" class="btn-biz-sm">企業様はこちら</a>
     <a href="https://lin.ee/Vf3InyV" target="_blank" class="btn-cta-sm" data-en="Register — 30 sec" data-ja="LINEで30秒登録">Register — 30 sec</a>
     <button class="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
   </div>
@@ -386,6 +404,7 @@ footer { background: #040f09; padding: 60px 32px 36px; }
   <a href="#benefits" onclick="toggleMenu()" data-en="Why Join" data-ja="参加するメリット">Why Join</a>
   <a href="#how" onclick="toggleMenu()" data-en="How it Works" data-ja="参加の流れ">How it Works</a>
   <a href="#faq" onclick="toggleMenu()" data-en="FAQ" data-ja="よくある質問">FAQ</a>
+  <a href="https://client.seron-japan.com/" target="_blank">企業様はこちら →</a>
   <div class="mobile-cta">
     <a href="https://lin.ee/Vf3InyV" target="_blank" class="btn-cta-sm" data-en="Register with LINE — Free" data-ja="LINEで30秒登録 — 無料">Register with LINE — Free</a>
   </div>
@@ -409,6 +428,9 @@ footer { background: #040f09; padding: 60px 32px 36px; }
         <span data-en="Register with LINE — 30 sec" data-ja="LINEで30秒登録">Register with LINE — 30 sec</span>
       </a>
       <span class="hero-note" data-en="100% free · No SNS posting required" data-ja="完全無料 · SNS投稿不要">100% free · No SNS posting required</span>
+    </div>
+    <div style="margin-top:20px;">
+      <a href="https://client.seron-japan.com/" target="_blank" class="btn-outline" data-business-link>企業様はこちら →</a>
     </div>
     <div class="hero-stats">
       <div>
